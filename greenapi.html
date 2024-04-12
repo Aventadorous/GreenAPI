@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>GREEN-API Integration</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+            color: #333;
+            display: flex;
+            justify-content: center;
+            height: 100vh;
+            align-items: center;
+        }
+        .container {
+            background-color: white;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+            overflow: hidden;
+            display: flex;
+            max-width: 80%;
+            height: 80%;
+        }
+        .left-panel, .right-panel {
+            padding: 20px;
+            width: 50%;
+        }
+        .left-panel {
+            border-right: 1px solid #ddd;
+        }
+        input[type="text"], button, textarea {
+            width: calc(100% - 40px);
+            margin-bottom: 10px;
+            padding: 10px;
+            border-radius: 4px;
+            border: 1px solid #ddd;
+            box-sizing: border-box;
+        }
+        button {
+            background-color: #5cb85c;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #4cae4c;
+        }
+        textarea {
+            height: calc(100% - 40px);
+            resize: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="left-panel">
+        	<input type="text" id="idInstance" placeholder="idInstance">
+     	 	<input type="text" id="apiToken" placeholder="ApiTokenInstance">
+        	<button onclick="getSettings()">getSettings</button>
+        	<button onclick="getStateInstance()">getStateInstance</button>
+        	<input type="text" id="messageText" placeholder="Message Text">
+        	<button onclick="sendMessage()">sendMessage</button>
+        	<input type="text" id="fileUrl" placeholder="File URL">
+        	<input type="text" id="fileName" placeholder="File Name">
+        	<button onclick="sendFileByUrl()">sendFileByUrl</button>
+        </div>
+        <div class="right-panel">
+            <textarea id="response" readonly>Ответ:</textarea>
+        </div>
+    </div>
+
+    <script>
+        const apiUrl = "https://7103.api.greenapi.com/waInstance";  // Adjust with correct API URL if needed
+	const chatIdValue = "11001234567@c.us"
+
+        function apiCall(endpoint, method, data) {
+            const instanceId = document.getElementById('idInstance').value;
+            const apiToken = document.getElementById('apiToken').value;
+            const url = `${apiUrl}${instanceId}/${endpoint}/${apiToken}`;
+
+            fetch(url, {
+                method: method,
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(data)
+            })
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById('response').value = JSON.stringify(data, null, 2);
+            })
+            .catch(error => {
+                document.getElementById('response').value = 'Error: ' + error;
+            });
+        }
+
+        function getSettings() {
+            apiCall('getSettings', 'GET');
+        }
+
+        function getStateInstance() {
+            apiCall('getStateInstance', 'GET');
+        }
+
+        function sendMessage() {
+            const messageValue = document.getElementById('messageText').value;
+
+ 	    const data = {
+                chatId: chatIdValue,
+                message: messageValue
+            };
+
+    	    apiCall('sendMessage', 'POST', data);
+	}
+
+
+        function sendFileByUrl() {
+	    const fileUrlValue = document.getElementById('fileUrl').value;
+	    const fileNameValue = document.getElementById('fileName').value;
+
+            const data = {
+                chatId: chatIdValue,
+                urlFile: fileUrlValue,
+                fileName: fileNameValue,
+                caption: "лошадка"
+            };
+            apiCall('sendFileByUrl', 'POST', data);
+        }
+    </script>
+</body>
+</html>
