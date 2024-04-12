@@ -73,8 +73,8 @@
     </div>
 
     <script>
-        const apiUrl = "https://7103.api.greenapi.com/waInstance";  // Adjust with correct API URL if needed
-	const chatIdValue = "11001234567@c.us"
+        const apiUrl = "https://7103.api.greenapi.com/waInstance";  // Add your API
+	const chatIdValue = "11001234567@c.us" // Change to the your needed ChatID
 
         function apiCall(endpoint, method, data) {
             const instanceId = document.getElementById('idInstance').value;
@@ -123,7 +123,7 @@
                 chatId: chatIdValue,
                 urlFile: fileUrlValue,
                 fileName: fileNameValue,
-                caption: "лошадка"
+                caption: "horse"
             };
             apiCall('sendFileByUrl', 'POST', data);
         }
